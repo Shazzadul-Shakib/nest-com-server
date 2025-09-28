@@ -26,8 +26,8 @@ export class JwtTokenService implements ITokenService {
 
   generateRefreshToken(payload: TRefreshTokenPayload): string {
     return this.jwtService.sign(payload, {
-      secret: jwtConfig.accessTokenSecret,
-      expiresIn: jwtConfig.accessTokenExpiresIn,
+      secret: jwtConfig.refreshTokenSecret,
+      expiresIn: jwtConfig.refreshTokenExpiresIn,
     });
   }
 

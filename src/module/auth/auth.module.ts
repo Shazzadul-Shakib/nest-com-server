@@ -13,6 +13,7 @@ import { PasswordHasher } from 'src/infrastructure/user/bcrypt-password-hasher';
 import { LoginService } from './application/login.service';
 import { JwtTokenService } from 'src/infrastructure/user/jwt-token-service';
 import { JwtModule } from '@nestjs/jwt';
+import { RefreshTokenService } from './application/refresh-token.service';
 
 @Module({
   imports: [JwtModule.register({ global: true })],
@@ -20,6 +21,7 @@ import { JwtModule } from '@nestjs/jwt';
   providers: [
     RegisterService,
     LoginService,
+    RefreshTokenService,
 
     { provide: USER_REPOSITORY_TOKEN, useClass: UserPrismaRepository },
     { provide: ID_GENERATOR_TOKEN, useClass: CryptoIdGenerator },

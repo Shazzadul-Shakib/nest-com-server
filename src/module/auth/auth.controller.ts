@@ -1,10 +1,13 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Res,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { RegisterService } from './application/register.service';
@@ -19,7 +22,8 @@ import {
 import { registerApiResponse } from './auth-docs';
 import { LoginDto } from './dto/login.dto';
 import { LoginService } from './application/login.service';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
+import { RefreshTokenService } from './application/refresh-token.service';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -27,6 +31,7 @@ export class AuthController {
   constructor(
     private readonly registerService: RegisterService,
     private readonly loginService: LoginService,
+    private readonly refreshTokenService: RefreshTokenService,
   ) {}
 
   @HttpCode(HttpStatus.CREATED)
@@ -54,5 +59,21 @@ export class AuthController {
     res.json(
       ApiResponseDto.success('User logged in successfully', { accessToken }),
     );
+  }
+
+  @Get('/access-token')
+  async getAccessToken(@Req() req: Request) {
+    const refreshToken = (await req.cookies['refresh-token']) as string;
+    console.log({refreshToken})
+
+    if (!refreshToken)
+      throw new UnauthorizedException('No token has been provided');
+
+    const accessToken =
+      await this.refreshTokenService.getAccessToken(refreshToken);
+
+    return ApiResponseDto.success('Access token retrived successfully', {
+      accessToken,
+    });
   }
 }
