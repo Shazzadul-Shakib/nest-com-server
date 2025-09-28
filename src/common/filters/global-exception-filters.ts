@@ -37,6 +37,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       switch (exception.code) {
         case 'P2002':
           message = 'Duplicate record already exists';
+          status = HttpStatus.CONFLICT; 
           break;
         case 'P2003':
           message = `Failed reference constrains : ${(exception.meta as { constraint: string })?.constraint}`;
