@@ -48,6 +48,7 @@ export class LoginService {
       id: user.id,
       name: user.name,
       email: user.email,
+      role: user.role,
     });
 
     const refreshToken = this.tokenService.generateRefreshToken({

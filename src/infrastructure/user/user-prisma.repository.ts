@@ -5,7 +5,7 @@ import { UserEntity } from 'src/domain/user/user-entity';
 import { IUserRepository } from 'src/domain/user/user.repository.interface';
 
 type UserModel = Prisma.UserGetPayload<{
-  select: { id: true; email: true; name: true; password: true };
+  select: { id: true; email: true; name: true; password: true; role: true };
 }>;
 
 @Injectable()
@@ -15,7 +15,7 @@ export class UserPrismaRepository implements IUserRepository {
   async create(user: UserEntity): Promise<UserEntity> {
     const prismaUser = await this.prisma.user.create({
       data: user.toPersistence(),
-      select: { id: true, email: true, name: true },
+      select: { id: true, email: true, name: true, role: true },
     });
     return this.toDomain({ ...prismaUser, password: '' });
   }
@@ -25,7 +25,7 @@ export class UserPrismaRepository implements IUserRepository {
       where: {
         email,
       },
-      select: { id: true, name: true, email: true, password: true },
+      select: { id: true, name: true, email: true, password: true, role: true },
     });
     if (!prismaUser) return null;
     return this.toDomain(prismaUser);
@@ -36,7 +36,7 @@ export class UserPrismaRepository implements IUserRepository {
       where: {
         id,
       },
-      select: { id: true, name: true, email: true, password: true },
+      select: { id: true, name: true, email: true, password: true, role: true },
     });
     if (!prismaUser) return null;
     return this.toDomain(prismaUser);
@@ -49,6 +49,7 @@ export class UserPrismaRepository implements IUserRepository {
       email: user.email,
       name: user.name,
       password: user.password,
+      role: user.role,
     });
   }
 }
