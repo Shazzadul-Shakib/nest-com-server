@@ -4,4 +4,5 @@ export abstract class IUserRepository{
     abstract create(user:UserEntity):Promise<UserEntity>;
     abstract findByEmail(email:string):Promise<UserEntity | null>;
     abstract findById(id:string):Promise<UserEntity | null>;
+    abstract findAll():Promise<UserEntity[]>;
 }

@@ -42,6 +42,13 @@ export class UserPrismaRepository implements IUserRepository {
     return this.toDomain(prismaUser);
   }
 
+  async findAll(): Promise<UserEntity[]> {
+    const prismaUsers = await this.prisma.user.findMany({
+      select: { id: true, name: true, email: true, password: true, role: true },
+    });
+    return prismaUsers.map((u) => this.toDomain({ ...u, password: '' }));
+  }
+
   // helper methods
   private toDomain(user: UserModel): UserEntity {
     return UserEntity.create({
