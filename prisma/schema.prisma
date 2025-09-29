@@ -30,3 +30,19 @@ model User {
   @@map("users")
 }
 
+model Products{
+  id String @id
+  name String
+  description String
+  price Int
+  Stock Int
+
+
+  imageUrl String?
+  imageId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("products")
+}
