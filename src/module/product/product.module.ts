@@ -9,11 +9,13 @@ import {
 import { ProductPrismaRepository } from 'src/infrastructure/product/product-prisma.repository';
 import { CloudinaryFileUploader } from 'src/infrastructure/shared/cloudinary-file-uploader';
 import { CryptoIdGenerator } from 'src/infrastructure/shared/crypto-id-generator';
+import { GetAllProductsService } from './application/get-all-products.service';
 
 @Module({
   controllers: [ProductController],
   providers: [
     CreateProductService,
+    GetAllProductsService,
 
     { provide: PRODUCT_REPOSITORY_TOKEN, useClass: ProductPrismaRepository },
     { provide: FILE_UPLOADER_TOKEN, useClass: CloudinaryFileUploader },

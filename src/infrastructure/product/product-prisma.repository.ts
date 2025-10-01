@@ -28,6 +28,22 @@ export class ProductPrismaRepository implements IProductRepository {
     return this.toDomain(prismaProduct)
   }
 
+  async getAllProducts(): Promise<ProductEntity[]> {
+    const prismaProducts = await this.prisma.products.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        price: true,
+        stock: true,
+        imageUrl: true,
+        imageId: true,
+      },
+    });
+
+    return prismaProducts.map((product) => this.toDomain(product));
+  }
+
 
 
   // helper methods
