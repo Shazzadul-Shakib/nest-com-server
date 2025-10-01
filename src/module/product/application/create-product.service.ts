@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { FILE_UPLOADER_TOKEN, ID_GENERATOR_TOKEN, PRODUCT_REPOSITORY_TOKEN } from 'src/common/token';
 import { ProductEntity } from 'src/domain/product/product-entity';
 import { IProductRepository } from 'src/domain/product/product-repository.interface';
 import { IFileUploader } from 'src/domain/shared/file-uploader.interface';
@@ -14,8 +15,11 @@ type TCreateProductServicePayload = {
 @Injectable()
 export class CreateProductService {
   constructor(
+    @Inject(PRODUCT_REPOSITORY_TOKEN)
     private readonly prodctRepository: IProductRepository,
+    @Inject(FILE_UPLOADER_TOKEN)
     private readonly fileUploader: IFileUploader,
+    @Inject(ID_GENERATOR_TOKEN)
     private readonly idGenerator: IIDGenerator,
   ) {}
 
