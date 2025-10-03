@@ -1,31 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/core/prisma/prisma.service';
 import { ProductEntity } from 'src/domain/product/product-entity';
 import { IProductRepository } from 'src/domain/product/product-repository.interface';
 
 type TProductModel = Prisma.ProductsGetPayload<{
-    select: {
-      id: true;
-      name: true;
-      description: true;
-      price: true;
-      stock: true;
-      imageUrl: true;
-      imageId: true;
-    };
-  }>;
+  select: {
+    id: true;
+    name: true;
+    description: true;
+    price: true;
+    stock: true;
+    imageUrl: true;
+    imageId: true;
+  };
+}>;
 
 @Injectable()
 export class ProductPrismaRepository implements IProductRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async createProduct(product: ProductEntity): Promise<ProductEntity> {
-    const prismaProduct= await this.prisma.products.create({
-        data:product.toPersistence(),
+    const prismaProduct = await this.prisma.products.create({
+      data: product.toPersistence(),
     });
 
-    return this.toDomain(prismaProduct)
+    return this.toDomain(prismaProduct);
   }
 
   async getAllProducts(): Promise<ProductEntity[]> {
@@ -44,19 +44,39 @@ export class ProductPrismaRepository implements IProductRepository {
     return prismaProducts.map((product) => this.toDomain(product));
   }
 
+  async getProductById(id: string): Promise<ProductEntity> {
+    const prismaProduct = await this.prisma.products.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        price: true,
+        stock: true,
+        imageUrl: true,
+        imageId: true,
+      },
+    });
 
+    if (!prismaProduct) {
+      throw new NotFoundException('Product not found');
+    }
+
+    return this.toDomain(prismaProduct);
+  }
 
   // helper methods
   private toDomain(product: TProductModel): ProductEntity {
     return ProductEntity.create({
       id: product.id,
       name: product.name,
-      description:product.description,
-      price:product.price,
-      stock:product.stock,
-      imageUrl:product.imageUrl ?? "",
-      imageId:product.imageId?? ""
-
+      description: product.description,
+      price: product.price,
+      stock: product.stock,
+      imageUrl: product.imageUrl ?? '',
+      imageId: product.imageId ?? '',
     });
   }
 }

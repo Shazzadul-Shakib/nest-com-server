@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   UploadedFile,
   UseGuards,
@@ -19,6 +20,7 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { GetAllProductsService } from './application/get-all-products.service';
+import { GetProductService } from './application/get-product.service';
 
 @Controller('products')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -26,6 +28,7 @@ export class ProductController {
   constructor(
     private readonly createProductService: CreateProductService,
     private readonly getAllProductsService: GetAllProductsService,
+    private readonly getProductsService: GetProductService,
   ) {}
 
   @Roles('Admin')
@@ -55,5 +58,13 @@ export class ProductController {
   async getProducts() {
     const products = await this.getAllProductsService.getAllProducts();
     return ApiResponseDto.success('Products retrieved successfully', products);
+  }
+
+  @Roles('Admin', 'Customer')
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async getProductById(@Param('id') id: string) {
+    const product = await this.getProductsService.getProductById(id);
+    return ApiResponseDto.success('Product retrieved successfully', product);
   }
 }
