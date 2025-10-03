@@ -12,6 +12,7 @@ import { CryptoIdGenerator } from 'src/infrastructure/shared/crypto-id-generator
 import { GetAllProductsService } from './application/get-all-products.service';
 import { GetProductService } from './application/get-product.service';
 import { DeleteProductService } from './application/delete-product.service';
+import { UpdateProductService } from './application/update-product.service';
 
 @Module({
   controllers: [ProductController],
@@ -24,6 +25,7 @@ import { DeleteProductService } from './application/delete-product.service';
     { provide: FILE_UPLOADER_TOKEN, useClass: CloudinaryFileUploader },
     { provide: ID_GENERATOR_TOKEN, useClass: CryptoIdGenerator },
     DeleteProductService,
+    UpdateProductService,
   ],
 })
 export class ProductModule {}

@@ -9,7 +9,7 @@ export function ImageValidationPipe() {
     fileIsRequired: false,
     validators: [
       new MaxFileSizeValidator({ maxSize: 1024 * 1024 }), // for max 1 mb
-      new FileTypeValidator({ fileType: /(jpg | jpeg|png)$/ }),
+      new FileTypeValidator({ fileType: /^(image\/(jpg|jpeg|png))$/ }),
     ],
   });
 }

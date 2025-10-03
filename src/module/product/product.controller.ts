@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   UploadedFile,
   UseGuards,
@@ -23,6 +24,8 @@ import { memoryStorage } from 'multer';
 import { GetAllProductsService } from './application/get-all-products.service';
 import { GetProductService } from './application/get-product.service';
 import { DeleteProductService } from './application/delete-product.service';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { UpdateProductService } from './application/update-product.service';
 
 @Controller('products')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -32,6 +35,7 @@ export class ProductController {
     private readonly getAllProductsService: GetAllProductsService,
     private readonly getProductsService: GetProductService,
     private readonly deleteProductService: DeleteProductService,
+    private readonly updateProductService: UpdateProductService,
   ) {}
 
   @Roles('Admin')
@@ -77,5 +81,30 @@ export class ProductController {
   async deleteProduct(@Param('id') id: string) {
     await this.deleteProductService.deleteProduct(id);
     return ApiResponseDto.success('Product deleted successfully');
+  }
+
+  @Roles('Admin')
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: memoryStorage(),
+      limits: { fileSize: 1 * 1024 * 1024 },
+    }),
+  )
+  async updateProduct(
+    @Param('id') id: string,
+    @UploadedFile(ImageValidationPipe())
+    file: Express.Multer.File,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+
+
+    const product = await this.updateProductService.updateProduct(
+      id,
+      updateProductDto,
+      file,
+    );
+    return ApiResponseDto.success('Product updated successfully', product);
   }
 }

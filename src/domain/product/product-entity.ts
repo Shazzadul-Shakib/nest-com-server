@@ -36,6 +36,13 @@ export class ProductEntity {
     return new ProductEntity(props);
   }
 
+  update(props: Partial<Omit<TProductProps, 'id'>>): ProductEntity {
+    return new ProductEntity({
+      ...this.toPersistence(),
+      ...props,
+    });
+  }
+
   toPersistence(): TProductProps {
     return {
       id: this.id,

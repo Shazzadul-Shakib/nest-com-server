@@ -75,6 +75,21 @@ export class ProductPrismaRepository implements IProductRepository {
     });
   }
 
+  async updateProduct(
+    id: string,
+    product: ProductEntity,
+  ): Promise<ProductEntity> {
+    const prismaProduct = await this.prisma.products.update({
+      where: {
+        id: id,
+      },
+      data: product.toPersistence(),
+      select: this.getSelect(),
+    });
+
+    return this.toDomain(prismaProduct);
+  }
+
   // helper methods
   private toDomain(product: TProductModel): ProductEntity {
     return ProductEntity.create({
@@ -86,5 +101,17 @@ export class ProductPrismaRepository implements IProductRepository {
       imageUrl: product.imageUrl ?? '',
       imageId: product.imageId ?? '',
     });
+  }
+
+  private getSelect(): Prisma.ProductsSelect {
+    return {
+      id: true,
+      name: true,
+      description: true,
+      price: true,
+      stock: true,
+      imageUrl: true,
+      imageId: true,
+    };
   }
 }
