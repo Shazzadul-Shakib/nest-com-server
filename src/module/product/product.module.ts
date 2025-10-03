@@ -11,17 +11,19 @@ import { CloudinaryFileUploader } from 'src/infrastructure/shared/cloudinary-fil
 import { CryptoIdGenerator } from 'src/infrastructure/shared/crypto-id-generator';
 import { GetAllProductsService } from './application/get-all-products.service';
 import { GetProductService } from './application/get-product.service';
+import { DeleteProductService } from './application/delete-product.service';
 
 @Module({
   controllers: [ProductController],
   providers: [
     CreateProductService,
     GetAllProductsService,
+    GetProductService,
 
     { provide: PRODUCT_REPOSITORY_TOKEN, useClass: ProductPrismaRepository },
     { provide: FILE_UPLOADER_TOKEN, useClass: CloudinaryFileUploader },
     { provide: ID_GENERATOR_TOKEN, useClass: CryptoIdGenerator },
-    GetProductService,
+    DeleteProductService,
   ],
 })
 export class ProductModule {}

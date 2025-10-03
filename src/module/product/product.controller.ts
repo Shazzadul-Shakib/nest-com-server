@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -21,6 +22,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { GetAllProductsService } from './application/get-all-products.service';
 import { GetProductService } from './application/get-product.service';
+import { DeleteProductService } from './application/delete-product.service';
 
 @Controller('products')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -29,6 +31,7 @@ export class ProductController {
     private readonly createProductService: CreateProductService,
     private readonly getAllProductsService: GetAllProductsService,
     private readonly getProductsService: GetProductService,
+    private readonly deleteProductService: DeleteProductService,
   ) {}
 
   @Roles('Admin')
@@ -66,5 +69,13 @@ export class ProductController {
   async getProductById(@Param('id') id: string) {
     const product = await this.getProductsService.getProductById(id);
     return ApiResponseDto.success('Product retrieved successfully', product);
+  }
+
+  @Roles('Admin')
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async deleteProduct(@Param('id') id: string) {
+    await this.deleteProductService.deleteProduct(id);
+    return ApiResponseDto.success('Product deleted successfully');
   }
 }

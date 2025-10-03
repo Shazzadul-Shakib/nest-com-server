@@ -67,6 +67,14 @@ export class ProductPrismaRepository implements IProductRepository {
     return this.toDomain(prismaProduct);
   }
 
+  async deleteProduct(id: string): Promise<void> {
+    await this.prisma.products.delete({
+      where: {
+        id: id,
+      },
+    });
+  }
+
   // helper methods
   private toDomain(product: TProductModel): ProductEntity {
     return ProductEntity.create({
