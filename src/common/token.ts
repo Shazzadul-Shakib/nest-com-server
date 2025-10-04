@@ -5,3 +5,5 @@ export const TOKEN_SERVICE_TOKEN = Symbol('ITokenService');
 
 export const PRODUCT_REPOSITORY_TOKEN = Symbol('IProductRepository');
 export const FILE_UPLOADER_TOKEN = Symbol('IFileUploader');
+
+export const CART_REPOSITORY_TOKEN = Symbol('ICartRepository');
