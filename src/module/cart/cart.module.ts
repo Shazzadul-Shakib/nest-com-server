@@ -4,6 +4,7 @@ import { AddToCartService } from './application/add-cart.service';
 import { CART_REPOSITORY_TOKEN, ID_GENERATOR_TOKEN } from 'src/common/token';
 import { PrismaCartRepository } from 'src/infrastructure/cart/cart-prisma.repository';
 import { CryptoIdGenerator } from 'src/infrastructure/shared/crypto-id-generator';
+import { GetCartService } from './application/get-cart.service';
 
 @Module({
   controllers: [CartController],
@@ -19,6 +20,8 @@ import { CryptoIdGenerator } from 'src/infrastructure/shared/crypto-id-generator
       provide: ID_GENERATOR_TOKEN,
       useClass: CryptoIdGenerator,
     },
+
+    GetCartService,
   ],
 
 })
