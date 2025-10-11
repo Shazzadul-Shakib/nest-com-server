@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "src/core/prisma/prisma.service";
-import { CartEntity } from "src/domain/cart/cart-entity";
-import { CartItemEntity } from "src/domain/cart/cart-item-entity";
-import { ICartRepository } from "src/domain/cart/cart.repository.interface";
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/core/prisma/prisma.service';
+import { CartEntity } from 'src/domain/cart/cart-entity';
+import { CartItemEntity } from 'src/domain/cart/cart-item-entity';
+import { ICartRepository } from 'src/domain/cart/cart.repository.interface';
 
 @Injectable()
 export class PrismaCartRepository implements ICartRepository {
@@ -11,7 +11,21 @@ export class PrismaCartRepository implements ICartRepository {
   async findByUserId(userId: string): Promise<CartEntity | null> {
     const cart = await this.prisma.cart.findUnique({
       where: { userId },
-      include: { CartItem: true },
+      include: {
+        CartItem: {
+          include: {
+            product: {
+              select: {
+                id: true,
+                name: true,
+                price: true,
+                imageUrl: true,
+                
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!cart) return null;
@@ -25,9 +39,11 @@ export class PrismaCartRepository implements ICartRepository {
           cartId: item.cartId,
           productId: item.productId,
           quantity: item.quantity,
+          product: item.product, // 👈 Include full product object
         }),
       ),
     });
+    
   }
 
   async create(cart: CartEntity): Promise<CartEntity> {

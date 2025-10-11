@@ -3,6 +3,11 @@ export type TCartItemProps = {
   cartId: string;
   productId: string;
   quantity: number;
+  product?: {
+    id: string;
+    name: string;
+    price: number;
+  };
 };
 
 export class CartItemEntity {
@@ -10,12 +15,14 @@ export class CartItemEntity {
   public readonly cartId: string;
   public readonly productId: string;
   public quantity: number;
+  public readonly product?: { id: string; name: string; price: number };
 
   constructor(props: TCartItemProps) {
     this.id = props.id;
     this.cartId = props.cartId;
     this.productId = props.productId;
     this.quantity = props.quantity;
+    this.product = props.product;
   }
 
   static create(props: TCartItemProps) {
