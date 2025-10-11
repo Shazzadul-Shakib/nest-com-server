@@ -20,7 +20,7 @@ export class PrismaCartRepository implements ICartRepository {
                 name: true,
                 price: true,
                 imageUrl: true,
-                
+
               },
             },
           },
@@ -39,7 +39,7 @@ export class PrismaCartRepository implements ICartRepository {
           cartId: item.cartId,
           productId: item.productId,
           quantity: item.quantity,
-          product: item.product, // 👈 Include full product object
+          product: item.product as { id: string; name: string; price: number; imageUrl: string },
         }),
       ),
     });

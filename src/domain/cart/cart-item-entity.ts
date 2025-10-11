@@ -7,6 +7,7 @@ export type TCartItemProps = {
     id: string;
     name: string;
     price: number;
+    imageUrl: string;
   };
 };
 
@@ -15,7 +16,7 @@ export class CartItemEntity {
   public readonly cartId: string;
   public readonly productId: string;
   public quantity: number;
-  public readonly product?: { id: string; name: string; price: number };
+  public readonly product?: { id: string; name: string; price: number, imageUrl: string };
 
   constructor(props: TCartItemProps) {
     this.id = props.id;
